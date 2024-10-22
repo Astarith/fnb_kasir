@@ -43,7 +43,7 @@ class _LoginState extends State<Login> {
                             CircleAvatar(
                               radius: 50,
                               backgroundImage:
-                                  AssetImage('assets/images/jiaoqiu.png'),
+                                  AssetImage('assets/images/logo perhotelan SMKN Cisarua.png'),
                             ),
                             SizedBox(height: 40),
                             Text(
@@ -166,7 +166,7 @@ class _LoginState extends State<Login> {
                 Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/images/hotel.jpg'),
+                        image: AssetImage('assets/images/WhatsApp Image 2024-10-14 at 15.30.51 (1).jpeg'),
                         fit: BoxFit.cover),
                   ),
                 ),
