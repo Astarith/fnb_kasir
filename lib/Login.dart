@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:fnb_kasir/homepage.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -42,8 +43,8 @@ class _LoginState extends State<Login> {
                           children: [
                             CircleAvatar(
                               radius: 50,
-                              backgroundImage:
-                                  AssetImage('assets/images/logo perhotelan SMKN Cisarua.png'),
+                              backgroundImage: AssetImage(
+                                  'assets/images/logo perhotelan SMKN Cisarua.png'),
                             ),
                             SizedBox(height: 40),
                             Text(
@@ -133,11 +134,16 @@ class _LoginState extends State<Login> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 60),
+                            SizedBox(height: 40),
                             Container(
                                 width: 100,
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return Home();
+                                    }));
+                                  },
                                   child: Text(
                                     "LOGIN",
                                     style: TextStyle(color: Colors.white),
@@ -166,7 +172,8 @@ class _LoginState extends State<Login> {
                 Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/images/WhatsApp Image 2024-10-14 at 15.30.51 (1).jpeg'),
+                        image: AssetImage(
+                            'assets/images/WhatsApp Image 2024-10-14 at 15.30.51 (1).jpeg'),
                         fit: BoxFit.cover),
                   ),
                 ),
