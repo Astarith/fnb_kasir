@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(height: 50),
+                            SizedBox(height: 30),
                             Container(
                               width: 300,
                               child: Column(
