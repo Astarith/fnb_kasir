@@ -183,7 +183,7 @@ class _LoginState extends State<Login> {
                 Center(
                   child: Container(
                     width: 500,
-                    height: 700,
+                    height: 100,
                     decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
