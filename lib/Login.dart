@@ -36,7 +36,7 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(10),
                             border:
                                 Border.all(color: Colors.white, width: 1.0)),
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(40),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
                               backgroundImage: AssetImage(
                                   'assets/images/logo perhotelan SMKN Cisarua.png'),
                             ),
-                            SizedBox(height: 40),
+                            SizedBox(height: 30),
                             Text(
                               "Sign In",
                               style: TextStyle(
@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(height: 50),
+                            SizedBox(height: 20),
                             Container(
                               width: 300,
                               child: Column(
