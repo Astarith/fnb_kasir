@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatelessWidget {
@@ -10,7 +9,7 @@ class Homepage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Baris 1: Atas
+          // Baris Header dengan Logo, Teks, dan SearchBar
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -18,20 +17,48 @@ class Homepage extends StatelessWidget {
                 height: 65,
                 width: 930,
                 color: Colors.white,
-                  child: Row(
-                    children: [
-                      Padding(padding: EdgeInsets.only(left: 10)),
-                      ClipOval(
-                        child: Image.asset('assets/images/logo perhotelan SMKN Cisarua.png',
+                child: Row(
+                  children: [
+                    Padding(padding: EdgeInsets.only(left: 10)),
+                    // Logo dalam ClipOval
+                    ClipOval(
+                      child: Image.asset(
+                        'assets/images/logo perhotelan SMKN Cisarua.png',
                         height: 50,
                         width: 50,
                         fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    // Teks "Food And Beverage"
+                    Text(
+                      'Food And Beverage',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 8, 2, 52),
+                        fontSize: 25,
+                      ),
+                    ),
+                    Spacer(), // Untuk menempatkan SearchBar di sebelah kanan
+                    // Search Bar
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Search...',
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                          ),
                         ),
                       ),
-                      SizedBox(width: 20,),
-                      Text('Food And Beverage', style: TextStyle(color: const Color.fromARGB(255, 8, 2, 52), fontSize: 25),)
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
               ),
               Container(
                 height: 65,
@@ -50,10 +77,11 @@ class Homepage extends StatelessWidget {
             ],
           ),
           
-          // Baris 2: Bawah
+          // Baris 2: Menu, Konten, dan Sidebar
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              // Container Menu di sebelah kiri
               Container(
                 height: 528,
                 width: 200,
@@ -65,6 +93,7 @@ class Homepage extends StatelessWidget {
                   ),
                 ),
               ),
+              // Area Konten di tengah
               Container(
                 height: 528,
                 width: 730,
@@ -76,6 +105,7 @@ class Homepage extends StatelessWidget {
                   ),
                 ),
               ),
+              // Sidebar di sebelah kanan
               Container(
                 height: 528,
                 width: 350,
