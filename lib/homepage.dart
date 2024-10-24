@@ -8,7 +8,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  String _selectedItem = 'Toast'; // Item yang dipilih, default-nya adalah 'Toast'
+  String _selectedItem =
+      'Toast'; // Item yang dipilih, default-nya adalah 'Toast'
 
   // List item untuk makanan dan minuman
   final List<String> makanan = [
@@ -101,7 +102,7 @@ class _HomepageState extends State<Homepage> {
               ),
             ],
           ),
-          
+
           // Baris 2: Menu, Konten, dan Sidebar
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -125,7 +126,7 @@ class _HomepageState extends State<Homepage> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue.shade900,
+                              color: const Color.fromARGB(255, 8, 40, 88),
                             ),
                           ),
                         ],
@@ -155,7 +156,7 @@ class _HomepageState extends State<Homepage> {
                   ],
                 ),
               ),
-              
+
               // Area Konten di tengah
               Container(
                 height: 528,
@@ -201,16 +202,33 @@ class _HomepageState extends State<Homepage> {
   // Widget untuk setiap item menu
   Widget _buildMenuItem(String item) {
     bool isSelected = _selectedItem == item;
-    return ListTile(
-      title: Text(item),
-      selected: isSelected,
-      selectedTileColor: Colors.red.shade100,
+    return GestureDetector(
       onTap: () {
         setState(() {
           _selectedItem = item; // Ubah item yang dipilih
         });
       },
-      textColor: isSelected ? Colors.red : Colors.black,
+      child: Container(
+        color: isSelected ? Colors.grey[300] : Colors.transparent, // Background abu-abu ketika dipilih
+        child: Row(
+          children: [
+            // Garis merah di samping kiri jika item dipilih
+            Container(
+              width: 5,
+              height: 50,
+              color: isSelected ? Colors.red : Colors.transparent,
+            ),
+            SizedBox(width: 10),
+            Text(
+              item,
+              style: TextStyle(
+                color: isSelected ? Colors.red : Colors.black, // Warna teks merah jika dipilih
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
