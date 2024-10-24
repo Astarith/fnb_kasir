@@ -8,8 +8,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  String _selectedItem =
-      'Toast';
+  String _selectedItem = 'Toast';
+  String _mejaNumber = '11';
 
   final List<String> imagepaths = [
     'assets/images/WhatsApp Image 2024-10-14 at 15.30.51 (1).jpeg',
@@ -98,16 +98,105 @@ class _HomepageState extends State<Homepage> {
                   ],
                 ),
               ),
+
+              // Sidebar kanan atas
               Container(
                 height: 65,
                 width: 350,
-                color: Colors.black,
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      print("Tombol ditekan");
-                    },
-                    child: Text('Click Me'),
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Bagian kiri dengan Ikon dan Teks
+                      Row(
+                        children: [
+                          // Ikon clipboard dengan latar belakang merah
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.content_paste,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          // Teks "Order Menu" dan "Meja No. $_mejaNumber"
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Order Menu',
+                                style: TextStyle(
+                                  color: Colors.blue.shade900,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Meja No. $_mejaNumber',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      // Bagian kanan dengan ikon edit dan overflow
+                      Row(
+                        children: [
+                          // Ikon Edit dengan fungsinya
+                          IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.red,
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              _editMejaNumberDialog(context);
+                            },
+                          ),
+                          SizedBox(width: 20),
+
+                          // Ikon Overflow dengan PopupMenu
+                          PopupMenuButton<int>(
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: Colors.black,
+                              size: 24,
+                            ),
+                            onSelected: (value) {
+                              switch (value) {
+                                case 1:
+                                  print('Pengaturan dipilih');
+                                  break;
+                                case 2:
+                                  print('Bantuan dipilih');
+                                  break;
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 1,
+                                child: Text('Pengaturan'),
+                              ),
+                              PopupMenuItem(
+                                value: 2,
+                                child: Text('Bantuan'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -176,10 +265,10 @@ class _HomepageState extends State<Homepage> {
                   child: GridView.builder(
                       padding: EdgeInsets.all(10),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 5,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          ),
+                        crossAxisCount: 5,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
                       itemCount: imagepaths.length,
                       itemBuilder: (context, index) {
                         return Container(
@@ -194,18 +283,20 @@ class _HomepageState extends State<Homepage> {
                               ]),
                           child: Column(
                             children: [
-                              Expanded
-                              (child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.asset(
-                                    imagepaths[index],
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
+                              Expanded(
+                                  child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.asset(
+                                  imagepaths[index],
+                                  fit: BoxFit.cover,
+                                ),
+                              )),
+                              SizedBox(
+                                height: 5,
                               ),
-                              SizedBox(height: 5,),
                               Text(
-                                textpath[index], style: TextStyle(color: Colors.blue.shade300),
+                                textpath[index],
+                                style: TextStyle(color: Colors.blue.shade300),
                               )
                             ],
                           ),
@@ -241,6 +332,42 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+// Fungsi untuk menampilkan dialog edit meja number
+  void _editMejaNumberDialog(BuildContext context) {
+    TextEditingController mejaController =
+        TextEditingController(text: _mejaNumber);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit Meja Number"),
+          content: TextField(
+            controller: mejaController,
+            decoration: InputDecoration(hintText: "Enter new Meja Number"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Save"),
+              onPressed: () {
+                setState(() {
+                  _mejaNumber = mejaController.text;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // Widget untuk setiap item menu
   Widget _buildMenuItem(String item) {
     bool isSelected = _selectedItem == item;
@@ -251,7 +378,9 @@ class _HomepageState extends State<Homepage> {
         });
       },
       child: Container(
-        color: isSelected ? Colors.grey[300] : Colors.transparent, // Background abu-abu ketika dipilih
+        color: isSelected
+            ? Colors.grey[300]
+            : Colors.transparent, // Background abu-abu ketika dipilih
         child: Row(
           children: [
             // Garis merah di samping kiri jika item dipilih
@@ -264,7 +393,9 @@ class _HomepageState extends State<Homepage> {
             Text(
               item,
               style: TextStyle(
-                color: isSelected ? Colors.red : Colors.black, // Warna teks merah jika dipilih
+                color: isSelected
+                    ? Colors.red
+                    : Colors.black, // Warna teks merah jika dipilih
                 fontSize: 16,
               ),
             ),
