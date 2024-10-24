@@ -9,7 +9,18 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   String _selectedItem =
-      'Toast'; // Item yang dipilih, default-nya adalah 'Toast'
+      'Toast';
+
+  final List<String> imagepaths = [
+    'assets/images/WhatsApp Image 2024-10-14 at 15.30.51 (1).jpeg',
+    'assets/images/logo perhotelan SMKN Cisarua.png'
+  ];
+
+  final List<String> textpath = [
+    'Roti 1',
+    'Roti 2',
+    'Roti 3',
+  ];
 
   // List item untuk makanan dan minuman
   final List<String> makanan = [
@@ -159,16 +170,47 @@ class _HomepageState extends State<Homepage> {
 
               // Area Konten di tengah
               Container(
-                height: 528,
-                width: 730,
-                color: Colors.cyan,
-                child: Center(
-                  child: Text(
-                    'Content Area',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
+                  height: 528,
+                  width: 730,
+                  color: Colors.white,
+                  child: GridView.builder(
+                      padding: EdgeInsets.all(10),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          ),
+                      itemCount: imagepaths.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(15.0),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 12,
+                                    spreadRadius: 3)
+                              ]),
+                          child: Column(
+                            children: [
+                              Expanded
+                              (child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.asset(
+                                    imagepaths[index],
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              ),
+                              SizedBox(height: 5,),
+                              Text(
+                                textpath[index], style: TextStyle(color: Colors.blue.shade300),
+                              )
+                            ],
+                          ),
+                        );
+                      })),
 
               // Sidebar di sebelah kanan
               Container(
