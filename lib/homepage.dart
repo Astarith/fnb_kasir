@@ -1,7 +1,36 @@
 import 'package:flutter/material.dart';
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   const Homepage({super.key});
+
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  String _selectedItem = 'Toast'; // Item yang dipilih, default-nya adalah 'Toast'
+
+  // List item untuk makanan dan minuman
+  final List<String> makanan = [
+    'Toast',
+    'Donuts',
+    'Quaso',
+    'Spesial Omlet',
+    'Spesial Orak Arik'
+  ];
+  final List<String> minuman = [
+    'Capuccino',
+    'Latte',
+    'Espresso',
+    'Double Espresso',
+    'Americano',
+    'Macchiato',
+    'Luwak Coffee',
+    'Lemon Tea',
+    'Green Tea',
+    'Black Tea',
+    'Thai Tea'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +38,7 @@ class Homepage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Baris Header dengan Logo, Teks, dan SearchBar
+          // Header dengan Logo, Teks, dan SearchBar
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -20,7 +49,6 @@ class Homepage extends StatelessWidget {
                 child: Row(
                   children: [
                     Padding(padding: EdgeInsets.only(left: 10)),
-                    // Logo dalam ClipOval
                     ClipOval(
                       child: Image.asset(
                         'assets/images/logo perhotelan SMKN Cisarua.png',
@@ -30,7 +58,6 @@ class Homepage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 20),
-                    // Teks "Food And Beverage"
                     Text(
                       'Food And Beverage',
                       style: TextStyle(
@@ -38,8 +65,7 @@ class Homepage extends StatelessWidget {
                         fontSize: 25,
                       ),
                     ),
-                    Spacer(), // Untuk menempatkan SearchBar di sebelah kanan
-                    // Search Bar
+                    Spacer(),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -67,7 +93,6 @@ class Homepage extends StatelessWidget {
                 child: Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Aksi ketika tombol ditekan
                       print("Tombol ditekan");
                     },
                     child: Text('Click Me'),
@@ -85,14 +110,52 @@ class Homepage extends StatelessWidget {
               Container(
                 height: 528,
                 width: 200,
-                color: Colors.amber,
-                child: Center(
-                  child: Text(
-                    'Menu',
-                    style: TextStyle(fontSize: 18, color: Colors.black),
-                  ),
+                color: Colors.white,
+                child: ListView(
+                  children: [
+                    // Kategori Makanan
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.fastfood, color: Colors.black),
+                          SizedBox(width: 8),
+                          Text(
+                            'MAKANAN',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ...makanan.map((item) => _buildMenuItem(item)).toList(),
+
+                    // Kategori Minuman
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.local_drink, color: Colors.black),
+                          SizedBox(width: 8),
+                          Text(
+                            'MINUMAN',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ...minuman.map((item) => _buildMenuItem(item)).toList(),
+                  ],
                 ),
               ),
+              
               // Area Konten di tengah
               Container(
                 height: 528,
@@ -105,6 +168,7 @@ class Homepage extends StatelessWidget {
                   ),
                 ),
               ),
+
               // Sidebar di sebelah kanan
               Container(
                 height: 528,
@@ -120,7 +184,6 @@ class Homepage extends StatelessWidget {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // Aksi ketika tombol ditekan
                         print("Sidebar button pressed");
                       },
                       child: Text('Sidebar Button'),
@@ -132,6 +195,22 @@ class Homepage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // Widget untuk setiap item menu
+  Widget _buildMenuItem(String item) {
+    bool isSelected = _selectedItem == item;
+    return ListTile(
+      title: Text(item),
+      selected: isSelected,
+      selectedTileColor: Colors.red.shade100,
+      onTap: () {
+        setState(() {
+          _selectedItem = item; // Ubah item yang dipilih
+        });
+      },
+      textColor: isSelected ? Colors.red : Colors.black,
     );
   }
 }
