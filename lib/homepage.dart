@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 
-class Homepage extends StatelessWidget {
-  Homepage({super.key});
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
 
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  String _selectedItem = 'Toast';
+  String _mejaNumber = '11';
+ 
+  //grid view
   final List<String> imagepaths = [
     'assets/images/WhatsApp Image 2024-10-14 at 15.30.51 (1).jpeg',
     'assets/images/logo perhotelan SMKN Cisarua.png'
@@ -14,12 +23,35 @@ class Homepage extends StatelessWidget {
     'Roti 3',
   ];
 
+  // List item untuk makanan dan minuman
+  final List<String> makanan = [
+    'Toast',
+    'Donuts',
+    'Quaso',
+    'Spesial Omlet',
+    'Spesial Orak Arik'
+  ];
+  final List<String> minuman = [
+    'Capuccino',
+    'Latte',
+    'Espresso',
+    'Double Espresso',
+    'Americano',
+    'Macchiato',
+    'Luwak Coffee',
+    'Lemon Tea',
+    'Green Tea',
+    'Black Tea',
+    'Thai Tea'
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header dengan Logo, Teks, dan SearchBar
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -67,21 +99,113 @@ class Homepage extends StatelessWidget {
                   ],
                 ),
               ),
+              // Sidebar kanan atas
               Container(
                 height: 65,
                 width: 350,
-                color: Colors.black,
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      print("Tombol ditekan");
-                    },
-                    child: Text('Click Me'),
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Bagian kiri dengan Ikon dan Teks
+                      Row(
+                        children: [
+                          // Ikon clipboard dengan latar belakang merah
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.content_paste,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          // Teks "Order Menu" dan "Meja No. $_mejaNumber"
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Order Menu',
+                                style: TextStyle(
+                                  color: Colors.blue.shade900,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Meja No. $_mejaNumber',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      // Bagian kanan dengan ikon edit dan overflow
+                      Row(
+                        children: [
+                          // Ikon Edit dengan fungsinya
+                          IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.red,
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              _editMejaNumberDialog(context);
+                            },
+                          ),
+                          SizedBox(width: 20),
+
+                          // Ikon Overflow dengan PopupMenu
+                          PopupMenuButton<int>(
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: Colors.black,
+                              size: 24,
+                            ),
+                            onSelected: (value) {
+                              switch (value) {
+                                case 1:
+                                  print('Pengaturan dipilih');
+                                  break;
+                                case 2:
+                                  print('Bantuan dipilih');
+                                  break;
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 1,
+                                child: Text('Pengaturan'),
+                              ),
+                              PopupMenuItem(
+                                value: 2,
+                                child: Text('Bantuan'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
           ),
+            ],
+          ),
+
+          // Baris 2: Menu, Konten, dan Sidebar
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -89,14 +213,52 @@ class Homepage extends StatelessWidget {
               Container(
                 height: 528,
                 width: 200,
-                color: Colors.amber,
-                child: Center(
-                  child: Text(
-                    'Menu',
-                    style: TextStyle(fontSize: 18, color: Colors.black),
-                  ),
+                color: Colors.white,
+                child: ListView(
+                  children: [
+                    // Kategori Makanan
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.fastfood, color: Colors.black),
+                          SizedBox(width: 8),
+                          Text(
+                            'MAKANAN',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: const Color.fromARGB(255, 8, 40, 88),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ...makanan.map((item) => _buildMenuItem(item)).toList(),
+
+                    // Kategori Minuman
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.local_drink, color: Colors.black),
+                          SizedBox(width: 8),
+                          Text(
+                            'MINUMAN',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ...minuman.map((item) => _buildMenuItem(item)).toList(),
+                  ],
                 ),
               ),
+
               // Area Konten di tengah
               Container(
                   height: 528,
@@ -140,6 +302,7 @@ class Homepage extends StatelessWidget {
                           ),
                         );
                       })),
+
               // Sidebar di sebelah kanan
               Container(
                 height: 528,
@@ -155,7 +318,6 @@ class Homepage extends StatelessWidget {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // Aksi ketika tombol ditekan
                         print("Sidebar button pressed");
                       },
                       child: Text('Sidebar Button'),
@@ -165,7 +327,86 @@ class Homepage extends StatelessWidget {
               )
             ],
           ),
-        ],
+      ],
+    );
+  }
+
+  // Widget untuk setiap item menu
+  Widget _buildMenuItem(String item) {
+    bool isSelected = _selectedItem == item;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedItem = item; // Ubah item yang dipilih
+        });
+      },
+      child: Container(
+        color: isSelected ? Colors.grey[300] : Colors.transparent, // Background abu-abu ketika dipilih
+        child: Row(
+          children: [
+            // Garis merah di samping kiri jika item dipilih
+            Container(
+              width: 5,
+              height: 50,
+              color: isSelected ? Colors.red : Colors.transparent,
+            ),
+            SizedBox(width: 10),
+            Text(
+              item,
+              style: TextStyle(
+                color: isSelected ? Colors.red : Colors.black, // Warna teks merah jika dipilih
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Fungsi untuk menampilkan dialog edit meja number
+  void _editMejaNumberDialog(BuildContext context) {
+    TextEditingController mejaController =
+        TextEditingController(text: _mejaNumber);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit Meja Number"),
+          content: TextField(
+            controller: mejaController,
+            decoration: InputDecoration(hintText: "Enter new Meja Number"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Save"),
+              onPressed: () {
+                setState(() {
+                  _mejaNumber = mejaController.text;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Fungsi untuk membuat item menu
+  Widget _buildMenuItem(String item) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Text(
+        item,
+        style: TextStyle(fontSize: 16, color: Colors.grey.shade800),
       ),
     );
   }
