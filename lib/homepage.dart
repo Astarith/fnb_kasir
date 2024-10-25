@@ -10,11 +10,11 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   String _selectedItem = 'Toast';
   String _mejaNumber = '11';
- 
-  //grid view
+
   final List<String> imagepaths = [
     'assets/images/WhatsApp Image 2024-10-14 at 15.30.51 (1).jpeg',
-    'assets/images/logo perhotelan SMKN Cisarua.png'
+    'assets/images/logo perhotelan SMKN Cisarua.png',
+    'assets/images/FrenchToast.jpg',
   ];
 
   final List<String> textpath = [
@@ -43,6 +43,12 @@ class _HomepageState extends State<Homepage> {
     'Green Tea',
     'Black Tea',
     'Thai Tea'
+  ];
+
+  final List<String> hargapath = [
+    'Rp10.000',
+    'Rp13.000',
+    'RP16.000'
   ];
 
   @override
@@ -99,6 +105,7 @@ class _HomepageState extends State<Homepage> {
                   ],
                 ),
               ),
+
               // Sidebar kanan atas
               Container(
                 height: 65,
@@ -130,6 +137,7 @@ class _HomepageState extends State<Homepage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Padding(padding: EdgeInsets.only(top: 10)),
                               Text(
                                 'Order Menu',
                                 style: TextStyle(
@@ -164,7 +172,7 @@ class _HomepageState extends State<Homepage> {
                               _editMejaNumberDialog(context);
                             },
                           ),
-                          SizedBox(width: 20),
+                          SizedBox(width: 2),
 
                           // Ikon Overflow dengan PopupMenu
                           PopupMenuButton<int>(
@@ -176,21 +184,21 @@ class _HomepageState extends State<Homepage> {
                             onSelected: (value) {
                               switch (value) {
                                 case 1:
-                                  print('Pengaturan dipilih');
+                                  print('Tersimpan');
                                   break;
                                 case 2:
-                                  print('Bantuan dipilih');
+                                  print('Riwayat');
                                   break;
                               }
                             },
                             itemBuilder: (context) => [
                               PopupMenuItem(
                                 value: 1,
-                                child: Text('Pengaturan'),
+                                child: Text('Tersimpan'),
                               ),
                               PopupMenuItem(
                                 value: 2,
-                                child: Text('Bantuan'),
+                                child: Text('Riwayat'),
                               ),
                             ],
                           ),
@@ -200,8 +208,6 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ),
               ),
-            ],
-          ),
             ],
           ),
 
@@ -221,7 +227,7 @@ class _HomepageState extends State<Homepage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          Icon(Icons.fastfood, color: Colors.black),
+                          Icon(Icons.breakfast_dining, color: Colors.black),
                           SizedBox(width: 8),
                           Text(
                             'MAKANAN',
@@ -241,7 +247,7 @@ class _HomepageState extends State<Homepage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          Icon(Icons.local_drink, color: Colors.black),
+                          Icon(Icons.coffee_sharp, color: Colors.black),
                           SizedBox(width: 8),
                           Text(
                             'MINUMAN',
@@ -263,19 +269,19 @@ class _HomepageState extends State<Homepage> {
               Container(
                   height: 528,
                   width: 730,
-                  color: Colors.white,
+                  color: Colors.grey.shade200,
                   child: GridView.builder(
                       padding: EdgeInsets.all(10),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 5,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          ),
+                        crossAxisCount: 5,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
                       itemCount: imagepaths.length,
                       itemBuilder: (context, index) {
                         return Container(
                           decoration: BoxDecoration(
-                              color: Colors.amber,
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(15.0),
                               boxShadow: [
                                 BoxShadow(
@@ -285,86 +291,130 @@ class _HomepageState extends State<Homepage> {
                               ]),
                           child: Column(
                             children: [
-                              Expanded
-                              (child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.asset(
-                                    imagepaths[index],
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
+                              Expanded(
+                                  child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.asset(
+                                  imagepaths[index],
+                                  fit: BoxFit.cover,
+                                ),
+                              )),
+                              SizedBox(
+                                height: 5,
                               ),
-                              SizedBox(height: 5,),
                               Text(
-                                textpath[index], style: TextStyle(color: Colors.blue.shade300),
+                                textpath[index],
+                                style: TextStyle(color: Colors.blue.shade900),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                hargapath[index],
+                                style: TextStyle(color: Colors.grey.shade300),
                               )
                             ],
                           ),
                         );
-                      })),
+                      }
+                )
+              ),
 
               // Sidebar di sebelah kanan
               Container(
                 height: 528,
                 width: 350,
-                color: Colors.black,
+                color: Colors.white,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Sidebar',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    // List items ordered
+                    Expanded(
+                      child: ListView(
+                        padding: EdgeInsets.all(8.0),
+                        children: [
+                          _buildOrderItem(
+                            'assets/images/FrenchToast.jpg',
+                            'Chocolate Toast',
+                            10000,
+                            'Jangan pedas, garam sedikit',
+                            1,
+                          ),
+                          _buildOrderItem(
+                            'assets/images/FrenchToast.jpg',
+                            'Blueberry Toast',
+                            10000,
+                            'Catatan',
+                            1,
+                          ),
+                          _buildOrderItem(
+                            'assets/images/lemon.jpg',
+                            'Lemon Tea',
+                            6000,
+                            'Jangan banyak gula',
+                            2,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        print("Sidebar button pressed");
-                      },
-                      child: Text('Sidebar Button'),
+
+                    // Total price and order button
+                    Container(
+                      padding: EdgeInsets.all(16.0),
+                      color: Colors.red,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '4 items',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                              Text(
+                                'Rp.24.000',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  icon: Icon(Icons.save, color: Colors.white),
+                                  label: Text('Order'),
+                                  onPressed: () {
+                                    // Action when pressing the order button
+                                    print('Order Button Pressed');
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.red,
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 16.0),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
-      ],
-    );
-  }
-
-  // Widget untuk setiap item menu
-  Widget _buildMenuItem(String item) {
-    bool isSelected = _selectedItem == item;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedItem = item; // Ubah item yang dipilih
-        });
-      },
-      child: Container(
-        color: isSelected ? Colors.grey[300] : Colors.transparent, // Background abu-abu ketika dipilih
-        child: Row(
-          children: [
-            // Garis merah di samping kiri jika item dipilih
-            Container(
-              width: 5,
-              height: 50,
-              color: isSelected ? Colors.red : Colors.transparent,
-            ),
-            SizedBox(width: 10),
-            Text(
-              item,
-              style: TextStyle(
-                color: isSelected ? Colors.red : Colors.black, // Warna teks merah jika dipilih
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
 
-  // Fungsi untuk menampilkan dialog edit meja number
+// Fungsi untuk menampilkan dialog edit meja number
   void _editMejaNumberDialog(BuildContext context) {
     TextEditingController mejaController =
         TextEditingController(text: _mejaNumber);
@@ -400,13 +450,122 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  // Fungsi untuk membuat item menu
+  // Widget untuk setiap item menu
   Widget _buildMenuItem(String item) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Text(
-        item,
-        style: TextStyle(fontSize: 16, color: Colors.grey.shade800),
+    bool isSelected = _selectedItem == item;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedItem = item; // Ubah item yang dipilih
+        });
+      },
+      child: Container(
+        color: isSelected
+            ? Colors.grey[300]
+            : Colors.transparent, // Background abu-abu ketika dipilih
+        child: Row(
+          children: [
+            // Garis merah di samping kiri jika item dipilih
+            Container(
+              width: 5,
+              height: 50,
+              color: isSelected ? Colors.red : Colors.transparent,
+            ),
+            SizedBox(width: 10),
+            Text(
+              item,
+              style: TextStyle(
+                color: isSelected
+                    ? Colors.red
+                    : Colors.black, // Warna teks merah jika dipilih
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOrderItem(String imagePath, String itemName, int price,
+      String notes, int quantity) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: Colors.red, width: 1),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.asset(
+              imagePath,
+              height: 60,
+              width: 60,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  itemName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text('Rp. $price'),
+                Text(
+                  notes,
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              Padding(padding: EdgeInsets.only(top: 10)),
+              IconButton(
+                constraints: BoxConstraints(
+                  minHeight: 5,
+                  minWidth: 5
+                ),
+                padding: EdgeInsets.all(1),
+                style: IconButton.styleFrom(backgroundColor: Colors.red
+                ),
+                icon: Icon(Icons.remove, color: Colors.white),
+                onPressed: () {
+                  // Logic for reducing quantity
+                },
+              ),
+              Text('$quantity'),
+              IconButton(
+                constraints: BoxConstraints(
+                  minHeight: 5,
+                  minWidth: 5,
+                ),
+                padding: EdgeInsets.all(1),
+                style: IconButton.styleFrom(backgroundColor: Colors.red),
+                icon: Icon(Icons.add, color: Colors.white),
+                onPressed: () {
+                  // Logic for increasing quantity
+                },
+              ),
+            ],
+          ),
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.red),
+            onPressed: () {
+              // Logic for removing item
+            },
+          ),
+        ],
       ),
     );
   }
