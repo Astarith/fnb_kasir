@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fnb_kasir/Login.dart';
+import 'package:fnb_kasir/provider/order.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

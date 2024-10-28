@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fnb_kasir/provider/order.dart';
+import 'package:fnb_kasir/provider/product.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -8,20 +11,24 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  int Angka = 0;
+
+  void Tambah() {
+    setState(() {
+      Angka++;
+    });
+  }
+
+  void Kurang() {
+    setState(() {
+      if (Angka > 0) {
+        Angka--;
+      }
+    });
+  }
+
   String _selectedItem = 'Toast';
   String _mejaNumber = '11';
-
-  final List<String> imagepaths = [
-    'assets/images/WhatsApp Image 2024-10-14 at 15.30.51 (1).jpeg',
-    'assets/images/logo perhotelan SMKN Cisarua.png',
-    'assets/images/FrenchToast.jpg',
-  ];
-
-  final List<String> textpath = [
-    'Roti 1',
-    'Roti 2',
-    'Roti 3',
-  ];
 
   // List item untuk makanan dan minuman
   final List<String> makanan = [
@@ -43,12 +50,6 @@ class _HomepageState extends State<Homepage> {
     'Green Tea',
     'Black Tea',
     'Thai Tea'
-  ];
-
-  final List<String> hargapath = [
-    'Rp10.000',
-    'Rp13.000',
-    'RP16.000'
   ];
 
   @override
@@ -267,38 +268,55 @@ class _HomepageState extends State<Homepage> {
 
               // Area Konten di tengah
               Container(
-                  height: 528,
-                  width: 730,
-                  color: Colors.grey.shade200,
-                  child: GridView.builder(
-                      padding: EdgeInsets.all(10),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 5,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemCount: imagepaths.length,
-                      itemBuilder: (context, index) {
-                        return Container(
+                height: 528,
+                width: 730,
+                color: Colors.grey.shade200,
+                child: GridView.builder(
+                  padding: EdgeInsets.all(10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: imagepaths.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                        onTap: () {
+                          // Saat produk diklik, tambahkan ke order
+                          final product = Product(
+                            imagePath: imagepaths[index],
+                            textpath: textpath[index],
+                            price: int.parse(
+                                hargapath[index].replaceAll(RegExp(r'\D'), '')),
+                          );
+
+                          Provider.of<OrderProvider>(context, listen: false)
+                              .addProduct(product);
+                        },
+                        child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15.0),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 12,
-                                    spreadRadius: 3)
-                              ]),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 12,
+                                spreadRadius: 3,
+                              ),
+                            ],
+                          ),
                           child: Column(
                             children: [
-                              Expanded(
-                                  child: ClipRRect(
+                              ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  imagepaths[index],
-                                  fit: BoxFit.cover,
+                                child: AspectRatio(
+                                  aspectRatio: 2,
+                                  child: Image.asset(
+                                    imagepaths[index],
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
-                              )),
+                              ),
                               SizedBox(
                                 height: 5,
                               ),
@@ -315,9 +333,9 @@ class _HomepageState extends State<Homepage> {
                               )
                             ],
                           ),
-                        );
-                      }
-                )
+                        ));
+                  },
+                ),
               ),
 
               // Sidebar di sebelah kanan
@@ -327,33 +345,17 @@ class _HomepageState extends State<Homepage> {
                 color: Colors.white,
                 child: Column(
                   children: [
-                    // List items ordered
                     Expanded(
-                      child: ListView(
-                        padding: EdgeInsets.all(8.0),
-                        children: [
-                          _buildOrderItem(
-                            'assets/images/FrenchToast.jpg',
-                            'Chocolate Toast',
-                            10000,
-                            'Jangan pedas, garam sedikit',
-                            1,
-                          ),
-                          _buildOrderItem(
-                            'assets/images/FrenchToast.jpg',
-                            'Blueberry Toast',
-                            10000,
-                            'Catatan',
-                            1,
-                          ),
-                          _buildOrderItem(
-                            'assets/images/lemon.jpg',
-                            'Lemon Tea',
-                            6000,
-                            'Jangan banyak gula',
-                            2,
-                          ),
-                        ],
+                      child: Consumer<OrderProvider>(
+                        builder: (context, orderProvider, child) {
+                          return ListView.builder(
+                            itemCount: orderProvider.orderItems.length,
+                            itemBuilder: (context, index) {
+                              final product = orderProvider.orderItems[index];
+                              return _buildOrderItem(product);
+                            },
+                          );
+                        },
                       ),
                     ),
 
@@ -367,12 +369,12 @@ class _HomepageState extends State<Homepage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '4 items',
+                                '${context.watch<OrderProvider>().totalItems} items',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16),
                               ),
                               Text(
-                                'Rp.24.000',
+                                'Rp.${context.watch<OrderProvider>().totalPrice}', // Ubah totalItems menjadi totalPrice
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -385,7 +387,8 @@ class _HomepageState extends State<Homepage> {
                             children: [
                               Expanded(
                                 child: ElevatedButton.icon(
-                                  icon: Icon(Icons.save, color: Colors.white),
+                                  icon: Icon(Icons.shopping_cart,
+                                      color: Colors.red),
                                   label: Text('Order'),
                                   onPressed: () {
                                     // Action when pressing the order button
@@ -487,8 +490,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Widget _buildOrderItem(String imagePath, String itemName, int price,
-      String notes, int quantity) {
+  Widget _buildOrderItem(Product product) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0),
       padding: EdgeInsets.all(8.0),
@@ -497,12 +499,12 @@ class _HomepageState extends State<Homepage> {
         border: Border.all(color: Colors.red, width: 1),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.asset(
-              imagePath,
+              product.imagePath,
               height: 60,
               width: 60,
               fit: BoxFit.cover,
@@ -514,55 +516,61 @@ class _HomepageState extends State<Homepage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  itemName,
+                  product.textpath,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
                 ),
-                Text('Rp. $price'),
+                Text('Rp. ${product.price}'),
                 Text(
-                  notes,
+                  product.notes,
                   style: TextStyle(color: Colors.grey, fontSize: 12),
                 ),
               ],
             ),
           ),
+          // Row untuk tombol plus dan minus
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(padding: EdgeInsets.only(top: 10)),
+              // Tombol Minus
               IconButton(
-                constraints: BoxConstraints(
-                  minHeight: 5,
-                  minWidth: 5
-                ),
-                padding: EdgeInsets.all(1),
-                style: IconButton.styleFrom(backgroundColor: Colors.red
-                ),
-                icon: Icon(Icons.remove, color: Colors.white),
+                icon: Icon(Icons.remove, color: Colors.red),
                 onPressed: () {
-                  // Logic for reducing quantity
+                  Provider.of<OrderProvider>(context, listen: false)
+                      .decreaseQuantity(product);
                 },
+                color: Colors.red,
+                padding: EdgeInsets.all(0),
               ),
-              Text('$quantity'),
-              IconButton(
-                constraints: BoxConstraints(
-                  minHeight: 5,
-                  minWidth: 5,
+              // Teks Jumlah
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  '${product.quantity}',
+                  style: TextStyle(fontSize: 16),
                 ),
-                padding: EdgeInsets.all(1),
-                style: IconButton.styleFrom(backgroundColor: Colors.red),
-                icon: Icon(Icons.add, color: Colors.white),
+              ),
+              // Tombol Plus
+              IconButton(
+                icon: Icon(Icons.add, color: Colors.red),
                 onPressed: () {
-                  // Logic for increasing quantity
+                  Provider.of<OrderProvider>(context, listen: false)
+                      .addProduct(product);
                 },
+                color: Colors.red,
+                padding: EdgeInsets.all(0),
               ),
             ],
           ),
+          SizedBox(width: 10), // Jarak antara jumlah dan tombol hapus
+          // Tombol Hapus
           IconButton(
             icon: Icon(Icons.delete, color: Colors.red),
             onPressed: () {
-              // Logic for removing item
+              Provider.of<OrderProvider>(context, listen: false)
+                  .removeProduct(product);
             },
           ),
         ],
