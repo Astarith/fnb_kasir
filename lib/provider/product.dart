@@ -4,14 +4,18 @@ final List<String> imagepaths = [
   'assets/images/FrenchToast.jpg',
   'assets/images/blb.jpeg',
   'assets/images/blueb.jpeg',
+  'assets/images/icelemon.jpg',
+  'assets/images/lemon.jpeg',
 ];
 
 final List<String> textpath = [
-  'Roti 1',
+  'Peanut Toast',
+  'Cheese Toast',
   'Roti 2',
-  'Roti 3',
+  'Blueberry Toast',
   'Roti 4',
-  'Roti 5',
+  'Minuman1',
+  'Minuman2',
 ];
 
 final List<String> hargapath = [
@@ -19,7 +23,9 @@ final List<String> hargapath = [
   'Rp13.000',
   'RP16.000',
   'Rp20.000',
-  'Rp18.000'
+  'Rp18.000',
+  'Rp10.000',
+  'Rp15.000',
 ];
 
 class Product {
