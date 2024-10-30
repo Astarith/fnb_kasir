@@ -529,256 +529,296 @@ class _HomepageState extends State<Homepage> {
     ]));
   }
 
-
   void _showPaymentDialog(BuildContext context) {
-  final TextEditingController _controller = TextEditingController();
-  final NumberFormat currencyFormat = NumberFormat.currency(
-    locale: 'id_ID',
-    symbol: '',
-    decimalDigits: 0,
-  );
+    final TextEditingController _controller = TextEditingController();
+    final NumberFormat currencyFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: '',
+      decimalDigits: 0,
+    );
 
-  _controller.addListener(() {
-    String text = _controller.text.replaceAll('.', '').replaceAll('Rp ', '');
-    if (text.isNotEmpty) {
-      int parsedValue = int.tryParse(text) ?? 0;
-      String formattedText = currencyFormat.format(parsedValue);
+    _controller.addListener(() {
+      String text = _controller.text.replaceAll('.', '').replaceAll('Rp ', '');
+      if (text.isNotEmpty) {
+        int parsedValue = int.tryParse(text) ?? 0;
+        String formattedText = currencyFormat.format(parsedValue);
 
-      if (_controller.text != formattedText) {
+        if (_controller.text != formattedText) {
+          _controller.value = _controller.value.copyWith(
+            text: formattedText,
+            selection: TextSelection.collapsed(offset: formattedText.length),
+          );
+        }
+      } else {
         _controller.value = _controller.value.copyWith(
-          text: formattedText,
-          selection: TextSelection.collapsed(offset: formattedText.length),
+          text: 'Rp. 0',
+          selection: TextSelection.collapsed(offset: 'Rp. 0'.length),
         );
       }
-    } else {
-      _controller.value = _controller.value.copyWith(
-        text: 'Rp. 0',
-        selection: TextSelection.collapsed(offset: 'Rp. 0'.length),
-      );
-    }
-  });
+    });
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: Colors.red, width: 2.0),
-        ),
-        contentPadding: EdgeInsets.all(20.0),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.payments_outlined,
-                    color: Color.fromARGB(255, 8, 40, 88)),
-                SizedBox(width: 8.0),
-                Text(
-                  'Masukan Nominal',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 8, 40, 88),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20.0),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Row(
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+            side: BorderSide(color: Colors.red, width: 2.0),
+          ),
+          contentPadding: EdgeInsets.all(20.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      'Rp. ',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '0',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
-                      ),
-                      style: TextStyle(color: Colors.black),
+                  Icon(Icons.payments_outlined,
+                      color: Color.fromARGB(255, 8, 40, 88)),
+                  SizedBox(width: 8.0),
+                  Text(
+                    'Masukan Nominal',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 8, 40, 88),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () {
-                final orderProvider = context.read<OrderProvider>();
-                final serviceFee = 3000;
-                final subTotal = orderProvider.totalPrice + serviceFee;
-
-                String inputNominalText = _controller.text.replaceAll('.', '').replaceAll('Rp ', '');
-                int inputNominal = int.tryParse(inputNominalText) ?? 0;
-
-                if (inputNominal < subTotal) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Pembayaran Gagal'),
-                        content: Text('Nominal yang dimasukkan tidak cukup untuk membayar total pesanan.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('OK'),
-                          ),
+              SizedBox(height: 20.0),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        'Rp. ',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
                         ],
-                      );
-                    },
-                  );
-                } else {
-                  int kembalian = inputNominal - subTotal;
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '0',
+                          hintStyle: TextStyle(color: Colors.grey[400]),
+                        ),
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: () {
+                  final orderProvider = context.read<OrderProvider>();
+                  final serviceFee = 3000;
+                  final subTotal = orderProvider.totalPrice + serviceFee;
 
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          side: BorderSide(color: Colors.green, width: 2.0),
-                        ),
-                        title: Center(
-                          child: Text(
-                            'Pembayaran Berhasil',
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Divider(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Total', style: TextStyle(fontSize: 16)),
-                                Text(
-                                    'Rp.${currencyFormat.format(orderProvider.totalPrice)}',
-                                    style: TextStyle(fontSize: 16)),
-                              ],
-                            ),
-                            SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Biaya Layanan',
-                                    style: TextStyle(fontSize: 16)),
-                                Text('Rp.$serviceFee',
-                                    style: TextStyle(fontSize: 16)),
-                              ],
-                            ),
-                            SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Sub Total',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                                Text('Rp.${currencyFormat.format(subTotal)}',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Jumlah Uang',
-                                    style: TextStyle(fontSize: 16)),
-                                Text('Rp.${currencyFormat.format(inputNominal)}',
-                                    style: TextStyle(fontSize: 16)),
-                              ],
-                            ),
-                            SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Kembalian',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                                Text('Rp.${currencyFormat.format(kembalian)}',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.green)),
-                              ],
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          Center(
-                            child: ElevatedButton(
+                  String inputNominalText = _controller.text
+                      .replaceAll('.', '')
+                      .replaceAll('Rp ', '');
+                  int inputNominal = int.tryParse(inputNominalText) ?? 0;
+
+                  if (inputNominal < subTotal) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Pembayaran Gagal'),
+                          content: Text(
+                              'Nominal yang dimasukkan tidak cukup untuk membayar total pesanan.'),
+                          actions: [
+                            TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                Navigator.of(context).pop();
                               },
-                              child: Text('OK',
-                                  style: TextStyle(color: Colors.white)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 24.0, vertical: 12.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    int kembalian = inputNominal - subTotal;
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            side: BorderSide(color: Colors.green, width: 2.0),
+                          ),
+                          title: Center(
+                            child: Text(
+                              'Pembayaran Berhasil',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-              child: Text(
-                'Bayar',
-                style: TextStyle(color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Divider(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Total', style: TextStyle(fontSize: 16)),
+                                  Text(
+                                      'Rp.${currencyFormat.format(orderProvider.totalPrice)}',
+                                      style: TextStyle(fontSize: 16)),
+                                ],
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Biaya Layanan',
+                                      style: TextStyle(fontSize: 16)),
+                                  Text('Rp.$serviceFee',
+                                      style: TextStyle(fontSize: 16)),
+                                ],
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Sub Total',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                  Text('Rp.${currencyFormat.format(subTotal)}',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Jumlah Uang',
+                                      style: TextStyle(fontSize: 16)),
+                                  Text(
+                                      'Rp.${currencyFormat.format(inputNominal)}',
+                                      style: TextStyle(fontSize: 16)),
+                                ],
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Kembalian',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                  Text('Rp.${currencyFormat.format(kembalian)}',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.green)),
+                                ],
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Tambahkan logika untuk cetak
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    padding: EdgeInsets.all(
+                                        10.0), // Sesuaikan padding
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: Icon(Icons.print,
+                                      color: Colors.white,
+                                      size: 24), // Hanya ikon
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Tambahkan logika untuk simpan
+                                  },
+                                  child: Text('Simpan',
+                                      style: TextStyle(color: Colors.white)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.orange,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 10.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK',
+                                      style: TextStyle(color: Colors.white)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 10.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                child: Text(
+                  'Bayar',
+                  style: TextStyle(color: Colors.white),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                elevation: 5,
-                shadowColor: Colors.redAccent,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                  elevation: 5,
+                  shadowColor: Colors.redAccent,
+                ),
               ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-
-  
+            ],
+          ),
+        );
+      },
+    );
+  }
 
 // Fungsi untuk menampilkan dialog edit meja number
   void _editMejaNumberDialog(BuildContext context) {
