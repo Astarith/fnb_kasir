@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:fnb_kasir/provider/order.dart';
 import 'package:fnb_kasir/provider/product.dart';
 import 'package:intl/intl.dart';
+import 'package:fnb_kasir/Riwayat.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -45,11 +46,11 @@ class _HomepageState extends State<Homepage> {
       return [];
     } else if (_selectedItem == 'Quaso') {
       return [];
-    } else if (_selectedItem == 'Hot Drink') {
+    } else if (_selectedItem == 'Coffwe') {
       return [
         Product(imagePath: imagepaths[5], textpath: textpath[5], price: 10000),
       ];
-    } else if (_selectedItem == 'Ice Drink') {
+    } else if (_selectedItem == 'Yogurt') {
       return [
         Product(imagePath: imagepaths[6], textpath: textpath[6], price: 15000),
       ];
@@ -64,8 +65,8 @@ class _HomepageState extends State<Homepage> {
     'Quaso',
   ];
   final List<String> minuman = [
-    'Hot Drink',
-    'Ice Drink',
+    'Coffwe',
+    'Yogurt',
   ];
 
   @override
@@ -202,7 +203,11 @@ class _HomepageState extends State<Homepage> {
                               print('Tersimpan');
                               break;
                             case 2:
-                              print('Riwayat');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Riwayat()),
+                              );
                               break;
                           }
                         },
