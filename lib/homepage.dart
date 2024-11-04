@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fnb_kasir/Input.dart';
 import 'package:provider/provider.dart';
 import 'package:fnb_kasir/provider/order.dart';
 import 'package:fnb_kasir/provider/product.dart';
@@ -71,15 +72,18 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        body: SingleChildScrollView(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       // Header dengan Logo, Teks, dan SearchBar
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            height: 65,
-            width: 930,
+            height: size.height * 0.09,
+            width: size.width * 0.72,
             color: Colors.white,
             child: Row(
               children: [
@@ -124,8 +128,8 @@ class _HomepageState extends State<Homepage> {
 
           // Sidebar kanan atas
           Container(
-            height: 65,
-            width: 350,
+            height: size.height * 0.09,
+            width: size.width * 0.28,
             color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -200,7 +204,10 @@ class _HomepageState extends State<Homepage> {
                         onSelected: (value) {
                           switch (value) {
                             case 1:
-                              print('Tersimpan');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Input()));
                               break;
                             case 2:
                               Navigator.push(
@@ -214,7 +221,7 @@ class _HomepageState extends State<Homepage> {
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: 1,
-                            child: Text('Tersimpan'),
+                            child: Text('Input Produk'),
                           ),
                           PopupMenuItem(
                             value: 2,
@@ -237,14 +244,14 @@ class _HomepageState extends State<Homepage> {
         children: [
           // Container Menu di sebelah kiri
           Container(
-            height: 528,
-            width: 200,
+            height: size.height * 0.91,
+            width: size.width * 0.14,
             color: Colors.white,
             child: ListView(
               children: [
                 // Kategori Makanan
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(top: 1.0, left: 7.0),
                   child: Row(
                     children: [
                       Icon(Icons.breakfast_dining, color: Colors.black),
@@ -287,8 +294,8 @@ class _HomepageState extends State<Homepage> {
 
           // Area Konten di tengah
           Container(
-            height: 528,
-            width: 730,
+            height: size.height * 0.91,
+            width: size.width * 0.58,
             color: Colors.grey.shade200,
             child: GridView.builder(
               padding: EdgeInsets.all(10),
@@ -352,8 +359,8 @@ class _HomepageState extends State<Homepage> {
 
           // Sidebar di sebelah kanan
           Container(
-            height: 528,
-            width: 350,
+            height: size.height * 0.91,
+            width: size.width * 0.28,
             color: Colors.white,
             child: Column(
               children: [
@@ -531,7 +538,7 @@ class _HomepageState extends State<Homepage> {
           )
         ],
       )
-    ]));
+    ])));
   }
 
   void _showPaymentDialog(BuildContext context) {
