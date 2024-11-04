@@ -227,6 +227,10 @@ class _HomepageState extends State<Homepage> {
                             value: 2,
                             child: Text('Riwayat'),
                           ),
+                          PopupMenuItem(
+                            value: 3,
+                            child: Text('Logout'),
+                          ),
                         ],
                       ),
                     ],

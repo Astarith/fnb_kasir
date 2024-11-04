@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
 
     try {
       final response = await _dio.post(
-        'https://74gslzvj-8000.asse.devtunnels.ms/api/login', //menggunakan URL untuk menghubungkan API
+        'https://mtr09ddw-9000.asse.devtunnels.ms/api/login', //menggunakan URL untuk menghubungkan API
         data: {
           'username': username,
           'password': password,
@@ -50,6 +50,13 @@ class _LoginState extends State<Login> {
         const SnackBar(content: Text('Login gagal')), //notif jika login gagal
       );
     }
+  }
+
+  bool _secureText = true;
+  showhide() {
+    setState(() {
+      _secureText = !_secureText;
+    });
   }
   
   @override
@@ -105,7 +112,7 @@ class _LoginState extends State<Login> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Email",
+                                      "Username",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
@@ -113,7 +120,7 @@ class _LoginState extends State<Login> {
                                     TextField(
                                       controller: usernameController,
                                       decoration: InputDecoration(
-                                        hintText: "Email",
+                                        hintText: "Username",
                                         prefixIcon: Icon(Icons.people),
                                         contentPadding:
                                             EdgeInsets.symmetric(vertical: 10),
