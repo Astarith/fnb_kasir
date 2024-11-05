@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fnb_kasir/homepage.dart';
 import 'package:fnb_kasir/provider/order.dart';
@@ -11,6 +12,39 @@ class Riwayat extends StatefulWidget {
 }
 
 class _RiwayatState extends State<Riwayat> {
+  final Dio _dio = Dio(); // Inisialisasi Dio
+
+  Future<void> _saveTransactionsToServer() async {
+    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+
+    try {
+      for (var data in orderProvider.riwayat) {
+        final response = await _dio.post(
+          'https://mtr09ddw-9000.asse.devtunnels.ms/api/saveTransaction',
+          data: {
+            'tanggal': data.tanggal,
+            'waktu': data.waktu,
+            'items': data.items,
+            'harga': data.harga,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('Transaksi berhasil disimpan.')),
+          );
+        } else {
+          throw Exception('Gagal menyimpan transaksi.');
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal menyimpan transaksi')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final orderProvider = Provider.of<OrderProvider>(context);
@@ -156,15 +190,13 @@ class _RiwayatState extends State<Riwayat> {
             },
             child: Icon(Icons.add, color: Colors.red),
             style: ElevatedButton.styleFrom(
-              shape: CircleBorder(), // Membuat tombol berbentuk lingkaran
+              shape: CircleBorder(),
               padding: EdgeInsets.all(12),
             ),
           ),
-          SizedBox(width: 16), // Jarak antar tombol
+          SizedBox(width: 16),
           ElevatedButton(
-            onPressed: () {
-              // Aksi untuk tombol kedua
-            },
+            onPressed: _saveTransactionsToServer, // Simpan transaksi ke server
             child: Icon(Icons.download_for_offline, color: Colors.red),
             style: ElevatedButton.styleFrom(
               shape: CircleBorder(),

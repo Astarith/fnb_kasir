@@ -45,38 +45,50 @@ class _InputState extends State<Input> {
 
   // Fungsi untuk mengirim data ke server
   void _submitData() async {
-    try {
-      // Mengambil data dari controller
-      final data = {
-        "product_name": _nameController.text,
-        "description": _descriptionController.text,
-        "category": _categoryController.text,
-        "sku": _skuController.text,
-        "stock_quantity": int.tryParse(_stockController.text) ?? 0,
-        "regular_price": double.tryParse(_regularPriceController.text) ?? 0.0,
-        "sale_price": double.tryParse(_salePriceController.text) ?? 0.0,
-      };
+  try {
+    // Buat FormData untuk mengirim data beserta file gambar
+    FormData formData = FormData.fromMap({
+      "product_name": _nameController.text,
+      "description": _descriptionController.text,
+      "category": _categoryController.text,
+      "sku": _skuController.text,
+      "stock_quantity": int.tryParse(_stockController.text) ?? 0,
+      "regular_price": double.tryParse(_regularPriceController.text) ?? 0.0,
+      "sale_price": double.tryParse(_salePriceController.text) ?? 0.0,
+      // Jika gambar ada, tambahkan ke FormData
+      if (_imageFile != null)
+        "image": await MultipartFile.fromFile(
+          _imageFile!.path,
+          filename: _imageFile!.path.split('/').last,
+        ),
+    });
 
-      // Mengirim data ke API menggunakan POST request
-      final response = await _dio.post(
-        'https://mtr09ddw-9000.asse.devtunnels.ms/api/createProduk', // Ganti dengan URL API Anda
-        data: data,
-      );
+    // Ganti dengan token kamu yang valid
+    final token = 'kljsdfygwaejkfsacgfsajbdklsjadhfjsbdfsdjahfg';
 
-      // Menampilkan hasil atau pesan sukses
-      if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Produk berhasil ditambahkan!')),
-        );
-        _clearData(); // Bersihkan form setelah data terkirim
-      }
-    } on DioError catch (e) {
-      // Tampilkan pesan kesalahan jika gagal
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal menambahkan produk: ${e.message}')),
-      );
-    }
+    // Mengirim data ke API menggunakan POST request dengan headers
+    final response = await _dio.post(
+      'https://mtr09ddw-9000.asse.devtunnels.ms/api/createProduk',
+      data: formData,
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Produk berhasil ditambahkan!')),
+    );
+
+    // Panggil _saveData untuk menambahkan data ke Recent
+    _saveData();
+  } on DioError catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Gagal menambahkan produk: ${e.message}')),
+    );
   }
+}
 
   // Fungsi untuk membersihkan data di form
   void _clearData() {

@@ -218,7 +218,7 @@ class _HomepageState extends State<Homepage> {
                               );
                               break;
                             case 3:
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Login()),
