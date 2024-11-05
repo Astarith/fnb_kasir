@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fnb_kasir/homepage.dart';
+import 'package:fnb_kasir/provider/order.dart';
+import 'package:provider/provider.dart';
 
 class Riwayat extends StatefulWidget {
   const Riwayat({super.key});
@@ -8,26 +11,10 @@ class Riwayat extends StatefulWidget {
 }
 
 class _RiwayatState extends State<Riwayat> {
-  // Data contoh untuk riwayat transaksi
-  final List<Map<String, dynamic>> riwayat = [
-    {"tanggal": "7 Januari 2024", "items": 3, "harga": 36000, "waktu": "16:43"},
-    {"tanggal": "5 Januari 2023", "items": 3, "harga": 36000, "waktu": "16:43"},
-    {
-      "tanggal": "29 Desember 2022",
-      "items": 3,
-      "harga": 36000,
-      "waktu": "16:43"
-    },
-    {
-      "tanggal": "18 Desember 2022",
-      "items": 3,
-      "harga": 36000,
-      "waktu": "16:43"
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final orderProvider = Provider.of<OrderProvider>(context);
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,14 +26,15 @@ class _RiwayatState extends State<Riwayat> {
             child: Row(
               children: [
                 IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.red,
-                    )),
-                    SizedBox(width: 15,),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.red,
+                  ),
+                ),
+                SizedBox(width: 15),
                 ClipOval(
                   child: Image.asset(
                     'assets/images/logo perhotelan SMKN Cisarua.png',
@@ -69,87 +57,118 @@ class _RiwayatState extends State<Riwayat> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: ListView.builder(
-              itemCount: riwayat.length,
-              itemBuilder: (context, index) {
-                final data = riwayat[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Tanggal
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 8),
-                      child: Text(
-                        data['tanggal'],
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    // Card Item Riwayat
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 15),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.red),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: orderProvider.riwayat.isEmpty
+                ? Center(child: Text("Tidak ada riwayat transaksi."))
+                : ListView.builder(
+                    itemCount: orderProvider.riwayat.length,
+                    itemBuilder: (context, index) {
+                      final data = orderProvider.riwayat[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Icon(Icons.receipt, color: Colors.red),
-                              const SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${data['items']} Item',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Rp. ${data['harga'].toString()}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 8),
+                            child: Text(
+                              data.tanggal,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
                               ),
-                            ],
+                            ),
                           ),
-                          Column(
-                            children: [
-                              Text(
-                                data['waktu'],
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 15),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.receipt, color: Colors.red),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${data.items} Item',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Rp. ${data.harga.toString()}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  // Tambahkan fungsi hapus disini
-                                },
-                                icon: Icon(Icons.close, color: Colors.red),
-                              ),
-                            ],
+                                Column(
+                                  children: [
+                                    Text(
+                                      data.waktu,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        orderProvider.removeTransaction(index);
+                                      },
+                                      icon:
+                                          Icon(Icons.close, color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
+                          const SizedBox(height: 10),
                         ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                );
-              },
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Homepage()),
+              );
+            },
+            child: Icon(Icons.add, color: Colors.red),
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder(), // Membuat tombol berbentuk lingkaran
+              padding: EdgeInsets.all(12),
+            ),
+          ),
+          SizedBox(width: 16), // Jarak antar tombol
+          ElevatedButton(
+            onPressed: () {
+              // Aksi untuk tombol kedua
+            },
+            child: Icon(Icons.download_for_offline, color: Colors.red),
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder(),
+              padding: EdgeInsets.all(12),
             ),
           ),
         ],

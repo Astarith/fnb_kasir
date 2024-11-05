@@ -18,6 +18,16 @@ final List<String> textpath = [
   'Minuman2',
 ];
 
+final List<String> name = [
+  'Peanut Toast',
+  'Cheese Toast',
+  'Roti 2',
+  'Blueberry Toast',
+  'Roti 4',
+  'Minuman1',
+  'Minuman2',
+];
+
 final List<String> hargapath = [
   'Rp10.000',
   'Rp13.000',
@@ -29,6 +39,7 @@ final List<String> hargapath = [
 ];
 
 class Product {
+  final String name;
   final String imagePath;
   final String textpath;
   final int price;
@@ -36,6 +47,7 @@ class Product {
   final String notes;
 
   Product({
+    this.name = '',
     required this.imagePath,
     required this.textpath,
     required this.price,
@@ -43,5 +55,16 @@ class Product {
     this.notes = '',
   });
 }
+class Transaction {
+  String tanggal;
+  String waktu;
+  int items;
+  int harga;
 
-
+  Transaction({
+    required this.tanggal,
+    required this.waktu,
+    required this.items,
+    required this.harga,
+  });
+}

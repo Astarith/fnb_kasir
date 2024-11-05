@@ -38,9 +38,8 @@ class _LoginState extends State<Login> {
           // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
-            builder: (context) => Homepage(
-                
-                ), //jika berhasil maka akan langsung pindah page
+            builder: (context) =>
+                Homepage(), //jika berhasil maka akan langsung pindah page
           ),
         );
       }
@@ -58,7 +57,7 @@ class _LoginState extends State<Login> {
       _secureText = !_secureText;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +67,6 @@ class _LoginState extends State<Login> {
             flex: 1,
             child: SingleChildScrollView(
               child: Container(
-                
                 color: Color(0xFF2C2C54),
                 padding: EdgeInsets.all(10),
                 child: Center(
@@ -129,13 +127,15 @@ class _LoginState extends State<Login> {
                                         floatingLabelBehavior:
                                             FloatingLabelBehavior.always,
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           borderSide: BorderSide(
                                             width: 1.0,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           borderSide: BorderSide(
                                             color: Colors.red,
                                             width: 2.0,
@@ -155,14 +155,29 @@ class _LoginState extends State<Login> {
                                     Text(
                                       "Password",
                                       style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     TextField(
                                       controller: passwordController,
+                                      obscureText:
+                                          _secureText, // Mengatur agar teks menjadi bintang
                                       decoration: InputDecoration(
                                         hintText: "Password",
                                         prefixIcon: Icon(Icons.lock),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            _secureText
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _secureText = !_secureText;
+                                            });
+                                          },
+                                        ),
                                         contentPadding:
                                             EdgeInsets.symmetric(vertical: 10),
                                         fillColor: Colors.white,
@@ -170,13 +185,15 @@ class _LoginState extends State<Login> {
                                         floatingLabelBehavior:
                                             FloatingLabelBehavior.always,
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           borderSide: BorderSide(
                                             width: 1.0,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           borderSide: BorderSide(
                                             color: Colors.red,
                                             width: 2.0,
@@ -184,25 +201,31 @@ class _LoginState extends State<Login> {
                                         ),
                                       ),
                                     ),
+                                    SizedBox(height: 40),
+                                    Center(
+                                      child: Container(
+                                        width: 100,
+                                        child: ElevatedButton(
+                                          onPressed: _login,
+                                          child: Text(
+                                            "LOGIN",
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red,
+                                            minimumSize:
+                                                Size(double.infinity, 50),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 40),
-                              Container(
-                                  width: 100,
-                                  child: ElevatedButton(
-                                    onPressed: _login,
-                                    child: Text(
-                                      "LOGIN",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red,
-                                        minimumSize: Size(double.infinity, 50),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15))),
-                                  ))
                             ],
                           ),
                         ),

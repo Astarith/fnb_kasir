@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fnb_kasir/Input.dart';
+import 'package:fnb_kasir/Login.dart';
 import 'package:provider/provider.dart';
 import 'package:fnb_kasir/provider/order.dart';
 import 'package:fnb_kasir/provider/product.dart';
@@ -216,6 +217,13 @@ class _HomepageState extends State<Homepage> {
                                     builder: (context) => Riwayat()),
                               );
                               break;
+                            case 3:
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Login()),
+                              );
+                              break;
                           }
                         },
                         itemBuilder: (context) => [
@@ -427,6 +435,7 @@ class _HomepageState extends State<Homepage> {
                                         3000; // Biaya layanan tetap Rp.3000
                                     final subTotal =
                                         orderProvider.totalPrice + serviceFee;
+
                                     return AlertDialog(
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
@@ -450,6 +459,29 @@ class _HomepageState extends State<Homepage> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Divider(),
+                                          // Menambahkan daftar produk
+                                          ...orderProvider.orderItems
+                                              .map((product) {
+                                            return Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(product.textpath,
+                                                        style: TextStyle(
+                                                            fontSize: 16)),
+                                                    Text('Rp.${product.price}',
+                                                        style: TextStyle(
+                                                            fontSize: 16)),
+                                                  ],
+                                                ),
+                                                Divider(), // Tambahkan Divider di bawah setiap item
+                                              ],
+                                            );
+                                          }).toList(),
+                                          SizedBox(height: 8),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -601,36 +633,39 @@ class _HomepageState extends State<Homepage> {
                 ],
               ),
               SizedBox(height: 20.0),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        'Rp. ',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: _controller,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '0',
-                          hintStyle: TextStyle(color: Colors.grey[400]),
+              SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          'Rp. ',
+                          style: TextStyle(color: Colors.black),
                         ),
-                        style: TextStyle(color: Colors.black),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '0',
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                          ),
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 20.0),
@@ -685,75 +720,104 @@ class _HomepageState extends State<Homepage> {
                               ),
                             ),
                           ),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Divider(),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                          content: SingleChildScrollView(
+                            // Tambahkan SingleChildScrollView di sini
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal:
+                                      8.0), // Tambahkan padding jika diperlukan
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('Total', style: TextStyle(fontSize: 16)),
-                                  Text(
-                                      'Rp.${currencyFormat.format(orderProvider.totalPrice)}',
-                                      style: TextStyle(fontSize: 16)),
+                                  Divider(),
+                                  ...orderProvider.orderItems.map((item) => Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(item.textpath,
+                                              style: TextStyle(fontSize: 16)),
+                                          Text(
+                                            'Rp.${currencyFormat.format(item.price)}',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                        ],
+                                      )),
+                                  Divider(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Total',
+                                          style: TextStyle(fontSize: 16)),
+                                      Text(
+                                        'Rp.${currencyFormat.format(orderProvider.totalPrice)}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Biaya Layanan',
+                                          style: TextStyle(fontSize: 16)),
+                                      Text('Rp.$serviceFee',
+                                          style: TextStyle(fontSize: 16)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Sub Total',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(
+                                        'Rp.${currencyFormat.format(subTotal)}',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Jumlah Uang',
+                                          style: TextStyle(fontSize: 16)),
+                                      Text(
+                                        'Rp.${currencyFormat.format(inputNominal)}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Kembalian',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.green)),
+                                      Text(
+                                        'Rp.${currencyFormat.format(kembalian)}',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
-                              SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Biaya Layanan',
-                                      style: TextStyle(fontSize: 16)),
-                                  Text('Rp.$serviceFee',
-                                      style: TextStyle(fontSize: 16)),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Sub Total',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  Text('Rp.${currencyFormat.format(subTotal)}',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Jumlah Uang',
-                                      style: TextStyle(fontSize: 16)),
-                                  Text(
-                                      'Rp.${currencyFormat.format(inputNominal)}',
-                                      style: TextStyle(fontSize: 16)),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Kembalian',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  Text('Rp.${currencyFormat.format(kembalian)}',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.green)),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
                           actions: [
                             Row(
@@ -761,23 +825,47 @@ class _HomepageState extends State<Homepage> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Tambahkan logika untuk cetak
+                                    // Logika cetak
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
-                                    padding: EdgeInsets.all(
-                                        10.0), // Sesuaikan padding
+                                    padding: EdgeInsets.all(10.0),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                   ),
                                   child: Icon(Icons.print,
-                                      color: Colors.white,
-                                      size: 24), // Hanya ikon
+                                      color: Colors.white, size: 24),
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Tambahkan logika untuk simpan
+                                    DateTime now = DateTime.now();
+                                    String formattedDate =
+                                        DateFormat('dd MMMM yyyy').format(now);
+                                    String formattedTime =
+                                        DateFormat('HH:mm').format(now);
+
+                                    final int jumlahItem =
+                                        orderProvider.totalItems;
+                                    final int totalHarga =
+                                        orderProvider.totalPrice;
+
+                                    final transaction = Transaction(
+                                      tanggal: formattedDate,
+                                      items: jumlahItem,
+                                      harga: totalHarga,
+                                      waktu: formattedTime,
+                                    );
+
+                                    Provider.of<OrderProvider>(context,
+                                            listen: false)
+                                        .addTransaction(transaction);
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Riwayat()),
+                                    );
                                   },
                                   child: Text('Simpan',
                                       style: TextStyle(color: Colors.white)),
